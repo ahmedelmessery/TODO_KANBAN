@@ -2,6 +2,7 @@ import { Card, CardContent, Typography, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDraggable } from '@dnd-kit/core';
 import { Task } from '../types/task';
+import React from 'react';
 
 interface TaskCardProps {
   task: Task;
@@ -25,12 +26,16 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
     opacity: isDragging ? 0.5 : 1,
   } : undefined;
 
+  const handleDelete = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onDelete(task.id);
+  };
+
   return (
     <Card 
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
       sx={{ 
         mb: 2, 
         cursor: 'grab', 
@@ -48,7 +53,11 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
         }
       }}
     >
-      <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
+      <CardContent 
+        {...listeners}
+        {...attributes}
+        sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}
+      >
         <Box display="flex" justifyContent="space-between" alignItems="start" gap={1}>
           <Box flex={1} minWidth={0}>
             <Typography 
@@ -76,13 +85,13 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
           </Box>
           <IconButton 
             size="small" 
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(task.id);
-            }}
+            onClick={handleDelete}
+            onTouchEnd={handleDelete}
             color="error"
             sx={{
               flexShrink: 0,
+              pointerEvents: 'auto',
+              touchAction: 'auto',
               '&:hover': {
                 bgcolor: 'error.light',
                 color: 'white',

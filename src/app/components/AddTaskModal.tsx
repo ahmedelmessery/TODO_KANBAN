@@ -25,10 +25,16 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
     }
   };
 
+  const handleClose = () => {
+    setTitle('');
+    setDescription('');
+    onClose();
+  };
+
   return (
     <Dialog 
       open={open} 
-      onClose={onClose} 
+      onClose={handleClose} 
       maxWidth="sm" 
       fullWidth
       fullScreen={false}
@@ -42,20 +48,20 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
       <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
         Add New Task
       </DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ pt: 2 }}>
         <TextField
           autoFocus
-          margin="dense"
           label="Title"
+          placeholder="Enter task title"
           fullWidth
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          sx={{ mb: 2, mt: 1 }}
+          sx={{ mb: 2 }}
           size="small"
         />
         <TextField
-          margin="dense"
           label="Description"
+          placeholder="Enter task description"
           fullWidth
           multiline
           rows={3}
@@ -65,7 +71,7 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
         />
       </DialogContent>
       <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
-        <Button onClick={onClose} size="medium">
+        <Button onClick={handleClose} size="medium">
           Cancel
         </Button>
         <Button onClick={handleSubmit} variant="contained" size="medium">
