@@ -48,13 +48,21 @@ function KanbanBoard() {
   }
 
   return (
-    <Container maxWidth={false} sx={{ py: 4, bgcolor: '#fafafa', minHeight: '100vh' }}>
-      <Box mb={4}>
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: 700, color: '#1f2937' }}>
-          Kanban Board
+    <Container maxWidth={false} sx={{ py: { xs: 2, md: 4 }, bgcolor: '#fafafa', minHeight: '100vh', px: { xs: 2, sm: 3 } }}>
+      <Box mb={{ xs: 3, md: 4 }}>
+        <Typography 
+          variant="h3" 
+          gutterBottom 
+          sx={{ 
+            fontWeight: 700, 
+            color: '#1f2937',
+            fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3rem' }
+          }}
+        >
+        Kanban Board
         </Typography>
         
-        <Box display="flex" gap={2} mb={3}>
+        <Box display="flex" flexDirection={{ xs: 'column', sm: 'row' }} gap={2} mb={3}>
           <TextField
             placeholder="Search tasks..."
             value={searchQuery}
@@ -70,8 +78,9 @@ function KanbanBoard() {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => setModalOpen(true)}
+            fullWidth={false}
             sx={{ 
-              minWidth: 150,
+              minWidth: { xs: '100%', sm: 150 },
               bgcolor: '#2563eb',
               '&:hover': {
                 bgcolor: '#1d4ed8',
@@ -84,7 +93,16 @@ function KanbanBoard() {
       </Box>
 
       <DndContext onDragEnd={handleDragEnd}>
-        <Box display="flex" gap={2} overflow="auto">
+        <Box 
+          display="flex" 
+          flexDirection={{ xs: 'column', md: 'row' }}
+          gap={2} 
+          suppressHydrationWarning
+          sx={{
+            overflowX: { md: 'auto' },
+            pb: 2,
+          }}
+        >
           {columns.map((col) => (
             <Column
               key={col.id}

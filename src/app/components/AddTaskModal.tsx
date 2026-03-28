@@ -26,8 +26,22 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Add New Task</DialogTitle>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="sm" 
+      fullWidth
+      fullScreen={false}
+      sx={{
+        '& .MuiDialog-paper': {
+          m: { xs: 2, sm: 3 },
+          width: { xs: 'calc(100% - 32px)', sm: '100%' },
+        }
+      }}
+    >
+      <DialogTitle sx={{ fontSize: { xs: '1.25rem', sm: '1.5rem' } }}>
+        Add New Task
+      </DialogTitle>
       <DialogContent>
         <TextField
           autoFocus
@@ -36,7 +50,8 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
           fullWidth
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, mt: 1 }}
+          size="small"
         />
         <TextField
           margin="dense"
@@ -46,11 +61,14 @@ export default function AddTaskModal({ open, onClose, onAdd }: AddTaskModalProps
           rows={3}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          size="small"
         />
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained">
+      <DialogActions sx={{ px: { xs: 2, sm: 3 }, pb: { xs: 2, sm: 3 } }}>
+        <Button onClick={onClose} size="medium">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" size="medium">
           Add Task
         </Button>
       </DialogActions>

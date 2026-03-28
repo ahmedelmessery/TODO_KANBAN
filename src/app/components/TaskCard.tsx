@@ -48,13 +48,29 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
         }
       }}
     >
-      <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="start">
-          <Box flex={1}>
-            <Typography variant="h6" component="div" gutterBottom sx={{ fontSize: '1rem', fontWeight: 600 }}>
+      <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
+        <Box display="flex" justifyContent="space-between" alignItems="start" gap={1}>
+          <Box flex={1} minWidth={0}>
+            <Typography 
+              variant="h6" 
+              component="div" 
+              gutterBottom 
+              sx={{ 
+                fontSize: { xs: '0.9rem', sm: '1rem' }, 
+                fontWeight: 600,
+                wordBreak: 'break-word',
+              }}
+            >
               {task.title}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography 
+              variant="body2" 
+              color="text.secondary"
+              sx={{
+                fontSize: { xs: '0.8rem', sm: '0.875rem' },
+                wordBreak: 'break-word',
+              }}
+            >
               {task.description}
             </Typography>
           </Box>
@@ -66,6 +82,7 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
             }}
             color="error"
             sx={{
+              flexShrink: 0,
               '&:hover': {
                 bgcolor: 'error.light',
                 color: 'white',
