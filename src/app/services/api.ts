@@ -3,11 +3,17 @@ import { Task } from "../types/task";
 
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000",
+  timeout: 5000,
 });
 
 export const getTasks = async (): Promise<Task[]> => {
-  const res = await API.get("/tasks");
-  return res.data;
+  try {
+    const res = await API.get("/tasks");
+    return res.data;
+  } catch (error) {
+    console.error("API Error:", error);
+    return [];
+  }
 };
 
 export const addTask = async (task: Omit<Task, 'id'>): Promise<Task> => {
