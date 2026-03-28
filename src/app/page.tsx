@@ -1,65 +1,115 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DndContext, DragEndEvent } from '@dnd-kit/core';
+import { Box, TextField, Button, Container, Typography, CircularProgress } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import Column from './components/Column';
+import AddTaskModal from './components/AddTaskModal';
+import { useTasks } from './hooks/useTasks';
+import { useTaskStore } from './store/useTaskStore';
+import { Task } from './types/task';
+
+const queryClient = new QueryClient();
+
+function KanbanBoard() {
+  const { tasks, isLoading, addTask, updateTask, deleteTask } = useTasks();
+  const { searchQuery, setSearchQuery } = useTaskStore();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const taskId = Number(active.id);
+      const newColumn = over.id as Task['column'];
+      updateTask({ id: taskId, task: { column: newColumn } });
+    }
+  };
+
+  const filteredTasks = tasks.filter((task: Task) =>
+    task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    task.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const columns = [
+    { id: 'backlog', title: 'Backlog' },
+    { id: 'in_progress', title: 'In Progress' },
+    { id: 'review', title: 'Review' },
+    { id: 'done', title: 'Done' },
+  ] as const;
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  return (
+    <Container maxWidth={false} sx={{ py: 4, bgcolor: '#fafafa', minHeight: '100vh' }}>
+      <Box mb={4}>
+        <Typography variant="h3" gutterBottom sx={{ fontWeight: 700, color: '#1f2937' }}>
+          Kanban Board
+        </Typography>
+        
+        <Box display="flex" gap={2} mb={3}>
+          <TextField
+            placeholder="Search tasks..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            size="small"
+            sx={{
+              bgcolor: 'white',
+              borderRadius: 1,
+            }}
+          />
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setModalOpen(true)}
+            sx={{ 
+              minWidth: 150,
+              bgcolor: '#2563eb',
+              '&:hover': {
+                bgcolor: '#1d4ed8',
+              }
+            }}
+          >
+            Add Task
+          </Button>
+        </Box>
+      </Box>
+
+      <DndContext onDragEnd={handleDragEnd}>
+        <Box display="flex" gap={2} overflow="auto">
+          {columns.map((col) => (
+            <Column
+              key={col.id}
+              title={col.title}
+              column={col.id}
+              tasks={filteredTasks.filter((task: Task) => task.column === col.id)}
+              onDelete={deleteTask}
+            />
+          ))}
+        </Box>
+      </DndContext>
+
+      <AddTaskModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onAdd={addTask}
+      />
+    </Container>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <KanbanBoard />
+    </QueryClientProvider>
   );
 }
