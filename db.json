@@ -1,0 +1,29 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "API Integration",
+      "description": "Connect frontend with backend services",
+      "column": "backlog"
+    },
+    {
+      "id": "2",
+      "title": "Fix login bug",
+      "description": "issue with authentication flow",
+      "column": "in_progress"
+    },
+    {
+      "id": "3",
+      "title": "Update documentation",
+      "description": "Add setup instructions for new developers",
+      "column": "done"
+    },
+    {
+      "id": "4",
+      "title": "Database migration",
+      "description": "Migrate user data to new schema",
+      "column": "review"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
