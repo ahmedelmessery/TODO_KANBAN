@@ -2,7 +2,7 @@
 
 1. Clone and install dependencies:
 
-git clone <your-repo-url>
+git clone <https://github.com/ahmedelmessery/TODO_KANBAN.git>
 cd todo-kanban
 npm install
 
