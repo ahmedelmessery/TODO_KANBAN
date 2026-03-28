@@ -38,64 +38,53 @@ export default function TaskCard({ task, onDelete }: TaskCardProps) {
       style={style}
       sx={{ 
         mb: 2, 
-        cursor: 'grab', 
-        '&:active': { cursor: 'grabbing' },
         touchAction: 'none',
         bgcolor: TASK_COLORS[task.column],
         borderLeft: `4px solid`,
         borderLeftColor: task.column === 'backlog' ? '#6b7280' :
         task.column === 'in_progress' ? '#2563eb' :
         task.column === 'review' ? '#d97706' : '#059669',
-        transition: 'all 0.2s ease',
+        transition: 'box-shadow 0.2s ease',
         '&:hover': {
           boxShadow: 3,
-          transform: 'translateY(-2px)',
         }
       }}
     >
-      <CardContent 
-        {...listeners}
-        {...attributes}
-        sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}
-      >
+      <CardContent sx={{ p: { xs: 1.5, sm: 2 }, '&:last-child': { pb: { xs: 1.5, sm: 2 } } }}>
         <Box display="flex" justifyContent="space-between" alignItems="start" gap={1}>
-          <Box flex={1} minWidth={0}>
+          {/* drag area */}
+          <Box 
+            flex={1} 
+            minWidth={0} 
+            sx={{ cursor: 'grab', '&:active': { cursor: 'grabbing' } }}
+            {...listeners}
+            {...attributes}
+          >
             <Typography 
               variant="h6" 
               component="div" 
               gutterBottom 
-              sx={{ 
-                fontSize: { xs: '0.9rem', sm: '1rem' }, 
-                fontWeight: 600,
-                wordBreak: 'break-word',
-              }}
+              sx={{ fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: 600, wordBreak: 'break-word' }}
             >
               {task.title}
             </Typography>
             <Typography 
               variant="body2" 
               color="text.secondary"
-              sx={{
-                fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                wordBreak: 'break-word',
-              }}
+              sx={{ fontSize: { xs: '0.8rem', sm: '0.875rem' }, wordBreak: 'break-word' }}
             >
               {task.description}
             </Typography>
           </Box>
+
+          {/* delete button - مفصول عن الـ drag */}
           <IconButton 
             size="small" 
             onClick={handleDelete}
-            onTouchEnd={handleDelete}
             color="error"
             sx={{
               flexShrink: 0,
-              pointerEvents: 'auto',
-              touchAction: 'auto',
-              '&:hover': {
-                bgcolor: 'error.light',
-                color: 'white',
-              }
+              '&:hover': { bgcolor: 'error.light', color: 'white' }
             }}
           >
             <DeleteIcon fontSize="small" />

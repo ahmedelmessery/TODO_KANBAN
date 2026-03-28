@@ -50,10 +50,10 @@ export default function Column({ title, column, tasks, onDelete }: ColumnProps) 
       ref={setNodeRef}
       sx={{ 
         p: 2, 
-        minHeight: { xs: 300, md: 400 },
+        minHeight: 400,
         bgcolor: isOver ? colors.accent + '20' : colors.bg,
-        width: { xs: '100%', md: 280 },
-        border: isOver ? `2px dashed ${colors.accent}` : 'none',
+        width: '100%',
+        border: isOver ? `2px dashed ${colors.accent}` : '2px solid transparent',
         transition: 'all 0.2s ease',
       }}
     >
